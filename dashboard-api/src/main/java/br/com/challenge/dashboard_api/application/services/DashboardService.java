@@ -6,9 +6,13 @@ import br.com.challenge.dashboard_api.domain.entitys.Ticket;
 import br.com.challenge.dashboard_api.domain.repositories.ClienteRepository;
 import br.com.challenge.dashboard_api.domain.repositories.ModuloRepository;
 import br.com.challenge.dashboard_api.domain.repositories.TicketRepository;
+import br.com.challenge.dashboard_api.mappers.ClienteMapper;
+import br.com.challenge.dashboard_api.mappers.ModuloMapper;
 import br.com.challenge.dashboard_api.mappers.TicketMapper;
+import br.com.challenge.dashboard_api.web.dtos.ClienteDTO;
 import br.com.challenge.dashboard_api.web.dtos.CreateTicketDTO;
 import br.com.challenge.dashboard_api.web.dtos.DashboardDataDTO;
+import br.com.challenge.dashboard_api.web.dtos.ModuloDTO;
 import br.com.challenge.dashboard_api.web.dtos.TicketDTO;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
@@ -20,17 +24,23 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DashboardService {
+
   private final TicketRepository ticketRepository;
   private final ClienteRepository clienteRepository;
   private final ModuloRepository moduloRepository;
   private final TicketMapper ticketMapper;
+  private final ClienteMapper clienteMapper;
+  private final ModuloMapper moduloMapper;
 
   public DashboardService(TicketRepository ticketRepository, ClienteRepository clienteRepository,
-      ModuloRepository moduloRepository, TicketMapper ticketMapper) {
+      ModuloRepository moduloRepository, TicketMapper ticketMapper, ClienteMapper clienteMapper,
+      ModuloMapper moduloMapper) {
     this.ticketRepository = ticketRepository;
     this.clienteRepository = clienteRepository;
     this.moduloRepository = moduloRepository;
     this.ticketMapper = ticketMapper;
+    this.clienteMapper = clienteMapper;
+    this.moduloMapper = moduloMapper;
   }
 
   public DashboardDataDTO getDashboardData(int ano, int mes) {
@@ -71,5 +81,15 @@ public class DashboardService {
     Ticket saveTicket = ticketRepository.save(newTicket);
 
     return ticketMapper.toDTO(saveTicket);
+  }
+
+  public List<ClienteDTO> findAllClientes() {
+    List<Cliente> clientes = clienteRepository.findAll();
+    return clienteMapper.toDTOList(clientes);
+  }
+
+  public List<ModuloDTO> findAllModulos() {
+    List<Modulo> modulos = moduloRepository.findAll();
+    return moduloMapper.toDTOList(modulos);
   }
 }
