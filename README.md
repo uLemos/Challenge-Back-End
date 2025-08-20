@@ -46,13 +46,13 @@ challenge/
 
 A arquitetura interna do back-end segue os princípios de Clean Code, com separação clara de responsabilidades:
 
-- `config`: Configurações do Spring (CORS).
-- `controller`: Camada da API REST.
-- `domain/entity`: Entidades do banco de dados (JPA).
-- `domain/repository`: Repositórios Spring Data JPA.
-- `dto`: Objetos de Transferência de Dados.
-- `mapper`: Conversores de Entidade para DTO (MapStruct).
-- `service`: Camada de lógica de negócio.
+- `application/services`: Camada de lógica de negócio.
+- `domain/entitys`: Entidades do banco de dados (JPA).
+- `domain/repositories`: Repositórios Spring Data JPA.
+- `infrastructure/config`: Configurações do Spring (CORS).
+- `mappers`: Conversores de Entidade para DTO (MapStruct).
+- `web/controllers`: Camada da API REST.
+- `web/dtos`: Objetos de Transferência de Dados.
 
 ## ⚙️ Pré-requisitos
 
@@ -61,54 +61,73 @@ Antes de começar, garanta que você tenha as seguintes ferramentas instaladas:
 - **Java (JDK) 17 ou superior**
 - **Maven 3.8 ou superior**
 - **PostgreSQL 14 ou superior** (apenas para o ambiente local)
-- **Cliente `psql`** (para o reset do banco local via `Makefile`)
+- **Cliente `psql`** (para o reset do banco local)
 - **Docker e Docker Compose** (para o ambiente de produção)
-- **Make** (para executar os comandos do `Makefile`)
+- **Make** (opcional, para usar os comandos simplificados)
 
 ## 🚀 Como Executar
 
-Você pode rodar o projeto de duas maneiras: localmente ou via Docker. Recomenda-se usar os comandos do `Makefile` para simplificar o processo.
+Você pode rodar o projeto de duas maneiras. Usar os comandos do `Makefile` é o método recomendado por ser mais simples.
 
 ### 1. Ambiente de Desenvolvimento Local (Perfil `dev`)
 
 Esta opção utiliza o Java, Maven e PostgreSQL instalados na sua máquina.
 
+**Método Recomendado (com Makefile):**
+
 ```bash
-# Clone este repositório
+# Clone o repositório e entre na pasta da API
 git clone <url-do-repositorio>
 cd challenge/dashboard-api
 
-# Para ver todos os comandos disponíveis
-make help
-
-# O comando abaixo vai resetar o banco de dados local e iniciar a aplicação
+# Reseta o banco de dados local e inicia a aplicação
 # (Certifique-se que seu banco 'dashboard_db_dev' existe e as credenciais em
 # application-dev.yml estão corretas)
 make dev-run-fresh
+```
+
+**Ou com os Comandos Padrões (sem Makefile):**
+
+```bash
+# 1. Navegue até a pasta da API
+cd challenge/dashboard-api
+
+# 2. Resete o banco de dados manualmente (requer o cliente psql)
+# Lembre-se de substituir o usuário 'postgres' se o seu for diferente
+psql -U postgres -d dashboard_db_dev -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+
+# 3. Inicie a aplicação com Maven
+mvn spring-boot:run
 ```
 
 A API estará disponível em `http://localhost:8080`.
 
 ### 2. Ambiente Docker (Perfil `prod`)
 
-Esta é a forma mais simples e recomendada, pois não exige nada além do Docker.
+Esta é a forma mais simples, pois não exige nada além do Docker.
+
+**Método Recomendado (com Makefile):**
 
 ```bash
-# Clone este repositório
+# Clone o repositório e entre na pasta da API
 git clone <url-do-repositorio>
 cd challenge/dashboard-api
 
-# Para ver todos os comandos disponíveis
-make help
-
-# O comando abaixo vai construir a imagem da API e iniciar os containers
-# da aplicação e do banco de dados em background.
+# Constrói a imagem e inicia os containers em background
 make docker-up
 ```
 
-A API estará disponível em `http://localhost:8080`.
+**Ou com o Comando Padrão (sem Makefile):**
 
-Para parar os containers, use `make docker-down`. Para um reset completo (incluindo dados), use `make docker-down-v`.
+```bash
+# Navegue até a pasta da API
+cd challenge/dashboard-api
+
+# Constrói a imagem e inicia os containers em background
+docker-compose up --build -d
+```
+
+A API estará disponível em `http://localhost:8080`. Para parar os containers, use `make docker-down` ou `docker-compose down`.
 
 ## 📡 Endpoints da API
 
@@ -172,7 +191,7 @@ Cria um novo registro de ticket.
     "titulo": "Meu novo ticket de teste",
     "cliente": "Apple Inc.",
     "modulo": "Vendas",
-    "dataAbertura": "2025-08-19T21:40:00",
+    "dataAbertura": "2025-08-19T23:25:00",
     "dataEncerramento": null
   }
   ```
