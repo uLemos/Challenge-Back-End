@@ -30,9 +30,16 @@ services:
       context: ./front-end       
     container_name: dashboard-frontend-prod
     ports:
-      - "80:80"                
+      - "5173:5173"                
     depends_on:
       - backend
+
+  recipe-api:
+    build:
+      context: ./recipe-api  
+    container_name: recipe-api-prod
+    ports:
+      - "8081:8081"  
 
 volumes:
   postgres_data:
