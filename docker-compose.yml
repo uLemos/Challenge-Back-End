@@ -4,15 +4,16 @@ services:
     container_name: dashboard-db-prod
     environment:
       POSTGRES_DB: dashboard_db_prod
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user        
+      POSTGRES_PASSWORD: password  
     ports:
-      - "5433:5432"
+      - "5433:5432"              
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  app:
-    build: .
+  backend:
+    build:
+      context: ./dashboard-api    
     container_name: dashboard-api-prod
     depends_on:
       - db
@@ -21,8 +22,17 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: prod
       DB_URL: jdbc:postgresql://db:5432/dashboard_db_prod
-      DB_USER: user
-      DB_PASSWORD: password
+      DB_USER: user             
+      DB_PASSWORD: password      
+
+  frontend:
+    build:
+      context: ./front-end       
+    container_name: dashboard-frontend-prod
+    ports:
+      - "80:80"                
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:
