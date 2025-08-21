@@ -7,6 +7,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+
 import br.com.challenge.dashboard_api.domain.entitys.Cliente;
 import br.com.challenge.dashboard_api.domain.entitys.Modulo;
 import br.com.challenge.dashboard_api.domain.entitys.Ticket;
@@ -18,15 +21,19 @@ import br.com.challenge.dashboard_api.mappers.ModuloMapper;
 import br.com.challenge.dashboard_api.mappers.TicketMapper;
 import br.com.challenge.dashboard_api.web.dtos.CreateTicketDTO;
 import br.com.challenge.dashboard_api.web.dtos.DashboardDataDTO;
+import br.com.challenge.dashboard_api.web.dtos.TicketDTO;
 import jakarta.persistence.EntityNotFoundException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class DashboardServiceTest {
@@ -82,13 +89,22 @@ class DashboardServiceTest {
         createTicket(2L, clienteA, moduloY),
         createTicket(3L, clienteB, moduloX));
 
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Ticket> mockPage = new PageImpl<>(mockTickets, pageable, mockTickets.size());
+
     // Quando o método findByYearAndMonth
     // for chamado com quaisquer inteiros, ENTÃO retorne a nossa lista de teste".
-    when(ticketRepository.findByYearAndMonth(anyInt(), anyInt())).thenReturn(mockTickets);
+    when(ticketRepository.findByYearAndMonth(anyInt(), anyInt(), any(Pageable.class))).thenReturn(mockPage);
+    when(ticketRepository.findAllByYearAndMonth(anyInt(), anyInt())).thenReturn(mockTickets);
+
+    when(ticketMapper.toDTO(any(Ticket.class))).thenAnswer(invocation -> {
+      Ticket t = invocation.getArgument(0);
+      return new TicketDTO(t.getId(), t.getTitulo(), t.getCliente().getNome(), t.getModulo().getNome(), null, null);
+    });
 
     // Act
     // Executamos o método que queremos testar.
-    DashboardDataDTO result = dashboardService.getDashboardData(2025, 8);
+    DashboardDataDTO result = dashboardService.getDashboardData(2025, 8, pageable);
 
     // Assert
     // Verificamos se o resultado é o esperado.
@@ -103,24 +119,30 @@ class DashboardServiceTest {
     assertEquals(1, result.getAgrupadoPorModulo().get("Modulo Y"));
 
     // Verificamos se o repositório foi chamado exatamente 1 vez.
-    verify(ticketRepository, times(1)).findByYearAndMonth(2025, 8);
+    verify(ticketRepository, times(1)).findByYearAndMonth(eq(2025), eq(8), any(Pageable.class));
+    verify(ticketRepository, times(1)).findAllByYearAndMonth(2025, 8);
   }
 
   @Test
   @DisplayName("Deve retornar listas e mapas vazios quando o repositório não encontrar tickets")
   void getDashboardData_deveRetornarVazio_quandoNaoHaTickets() {
 
-    // Arrange Configuramos o mock para retornar uma lista vazia.
-    when(ticketRepository.findByYearAndMonth(anyInt(), anyInt())).thenReturn(Collections.emptyList());
+    // Arrange
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Ticket> emptyPage = Page.empty(pageable);
+
+    // Configuramos o mock para retornar uma lista vazia.
+    when(ticketRepository.findByYearAndMonth(anyInt(), anyInt(), any(Pageable.class))).thenReturn(emptyPage);
+    when(ticketRepository.findAllByYearAndMonth(anyInt(), anyInt())).thenReturn(Collections.emptyList());
 
     // Act: Executamos o método.
-    DashboardDataDTO result = dashboardService.getDashboardData(2025, 8);
+    DashboardDataDTO result = dashboardService.getDashboardData(2025, 8, pageable);
 
     // Assert: Verificamos se o resultado não é nulo e se as listas/mapas estão
     // vazios.
     assertNotNull(result);
 
-    assertTrue(result.getListaTickets().isEmpty());
+    assertTrue(result.getListaTickets().getContent().isEmpty());
     assertTrue(result.getAgrupadoPorCliente().isEmpty());
     assertTrue(result.getAgrupadoPorModulo().isEmpty());
   }
