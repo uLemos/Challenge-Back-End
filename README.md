@@ -111,11 +111,12 @@ Com o banco de dados criado, você pode iniciar as aplicações. Requer dois ter
 - **Opção B: Manualmente (Sem Makefile)**
   ```bash # 1. Resete o schema do banco de dados (requer psql)
   psql -U postgres -d dashboard_db_dev -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
-      # 2. Inicie a aplicação
-      cd challenge/dashboard-api
-      mvn spring-boot:run
-      ```
-  _A API estará disponível em `http://localhost:8080`._
+  # 2. Inicie a aplicação
+  cd challenge/dashboard-api
+  mvn spring-boot:run
+  ```
+
+_A API estará disponível em `http://localhost:8080`._
 
 **Terminal 2 - Rodando o Front-end:**
 
