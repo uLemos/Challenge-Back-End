@@ -1,151 +1,98 @@
-# Desafio Full-Stack: Dashboard de Chamados
+# Desafios Full-Stack & Microserviços
 
 ![Java](https://img.shields.io/badge/Java-17-blue?logo=java&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.1-green?logo=spring&logoColor=white) ![React](https://img.shields.io/badge/React-18-blue?logo=react&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript&logoColor=white) ![Docker](https://img.shields.io/badge/Docker-20.10-blue?logo=docker&logoColor=white)
 
-Aplicação Full-Stack desenvolvida como solução para o desafio. A plataforma consiste em uma **API RESTful** construída com Spring Boot e um **Front-end interativo** construído com React, que consome a API para exibir um dashboard de chamados de suporte.
+Este repositório contém uma plataforma de software completa, desenvolvida como solução para múltiplos desafios de desenvolvimento, integrando uma aplicação front-end com uma arquitetura de microserviços no back-end.
 
-O requisito central do back-end é que o agrupamento de dados (por cliente e por módulo) seja realizado na lógica da aplicação (em memória), e não diretamente no banco de dados via SQL.
+## 🎯 Desafios Implementados
 
-## ✨ Features
+1.  **Dashboard de Chamados (Full-Stack):** Uma aplicação completa com uma API back-end que fornece dados para um dashboard de chamados e um front-end interativo que consome e exibe esses dados com gráficos e tabelas.
+2.  **API de Receitas (Proxy API):** Um microserviço back-end que atua como um proxy para uma API externa de receitas, expondo endpoints para busca e consulta de pratos disponíveis.
 
-- **API Robusta:** Back-end completo com endpoints para consulta e criação de dados.
-- **Dashboard Interativo:** Front-end com gráficos e tabelas que reagem dinamicamente aos filtros do usuário.
-- **Ambiente 100% Containerizado:** Configuração completa com Docker Compose para orquestrar o Front-end (Nginx), Back-end (Java) e Banco de Dados (PostgreSQL).
-- **Setup Automatizado:** Banco de dados e carga de dados iniciais gerenciados via Flyway.
-- **Documentação Interativa:** API documentada com Swagger/OpenAPI.
-- **Qualidade de Código:** Testes unitários na lógica de negócio e tratamento de erros centralizado.
-- **Estrutura de Branches Profissional:** Branches `main` e `develop` separadas, prontas para um fluxo de trabalho de CI/CD.
-- **Fluxo de Trabalho Simplificado:** Um `Makefile` para facilitar a execução, build e gerenciamento dos ambientes.
+## ✨ Features Globais
+
+- **Arquitetura de Monorepo:** Múltiplos projetos gerenciados em um único repositório Git.
+- **Ambiente 100% Containerizado:** Configuração completa com Docker Compose para orquestrar toda a plataforma (Front-end, 2 Back-ends, Banco de Dados) com um único comando.
+- **Fluxo de Trabalho Profissional:** Comandos simplificados com `Makefile`, estrutura de branches `main`/`develop` e testes unitários para a lógica de negócio crítica.
+- **Documentação Completa:** Documentação interativa com Swagger para cada API e READMEs detalhados em cada nível do projeto.
+- **Código de Alta Qualidade:** Projetos construídos com princípios de Clean Code, tratamento de erros centralizado e validação de entrada.
 
 ## 🛠️ Tecnologias Utilizadas
 
 ### Back-end
 
-| Tecnologia            | Propósito                                    |
-| :-------------------- | :------------------------------------------- |
-| **Java 17**           | Linguagem de programação.                    |
-| **Spring Boot 3.4.1** | Framework principal da API.                  |
-| **Spring Data JPA**   | Camada de persistência de dados.             |
-| **PostgreSQL 14**     | Banco de dados relacional.                   |
-| **Flyway**            | Versionamento e migração do schema do banco. |
-| **MapStruct**         | Mapeamento de DTOs para Entidades.           |
-| **Springdoc-openapi** | Geração da documentação Swagger UI.          |
-| **Maven**             | Gerenciamento de dependências e build.       |
+| Tecnologia                                                                               | Propósito                                    |
+| :--------------------------------------------------------------------------------------- | :------------------------------------------- |
+| [**Java 17**](https://www.oracle.com/java/)                                              | Linguagem de programação.                    |
+| [**Spring Boot 3.4.1**](https://spring.io/projects/spring-boot)                          | Framework principal da API.                  |
+| [**Spring Data JPA**](https://spring.io/projects/spring-data-jpa)                        | Camada de persistência de dados.             |
+| [**Spring WebFlux**](https://docs.spring.io/spring-framework/reference/web/webflux.html) | Para chamadas reativas com `WebClient`.      |
+| [**PostgreSQL 14**](https://www.postgresql.org/)                                         | Banco de dados relacional.                   |
+| [**Flyway**](https://flywaydb.org/)                                                      | Versionamento e migração do schema do banco. |
+| [**MapStruct**](https://mapstruct.org/)                                                  | Mapeamento de DTOs para Entidades.           |
+| [**Springdoc-openapi**](https://springdoc.org/)                                          | Geração da documentação Swagger UI.          |
+| [**Maven**](https://maven.apache.org/)                                                   | Gerenciamento de dependências e build.       |
 
 ### Front-end
 
-| Tecnologia       | Propósito                                            |
-| :--------------- | :--------------------------------------------------- |
-| **React 18**     | Biblioteca para construção da UI.                    |
-| **TypeScript**   | Superset do JavaScript com tipagem estática.         |
-| **Vite**         | Ferramenta de build e servidor de desenvolvimento.   |
-| **Tailwind CSS** | Framework de estilização utility-first.              |
-| **Shadcn/ui**    | Biblioteca de componentes de UI.                     |
-| **Recharts**     | Biblioteca para criação dos gráficos.                |
-| **Nginx**        | Servidor web para a versão de produção do front-end. |
+| Tecnologia                                        | Propósito                                          |
+| :------------------------------------------------ | :------------------------------------------------- |
+| [**React 18**](https://react.dev/)                | Biblioteca para construção da UI.                  |
+| [**TypeScript**](https://www.typescriptlang.org/) | Superset do JavaScript com tipagem estática.       |
+| [**Vite**](https://vitejs.dev/)                   | Ferramenta de build e servidor de desenvolvimento. |
+| [**Tailwind CSS**](https://tailwindcss.com/)      | Framework de estilização utility-first.            |
+| [**Shadcn/ui**](https://ui.shadcn.com/)           | Biblioteca de componentes de UI.                   |
+| [**Recharts**](https://recharts.org/)             | Biblioteca para criação dos gráficos.              |
+| [**Nginx**](https://www.nginx.com/)               | Servidor web para a versão de produção.            |
 
 ## 📁 Estrutura do Projeto
 
-O projeto está organizado em um monorepo, com o back-end e o front-end em diretórios separados na raiz.
-
 ```
 challenge/
-├── dashboard-api/      # Projeto Back-end (Spring Boot)
-├── front-end/          # Projeto Front-end (React + Vite)
+├── dashboard-api/      # Projeto Back-end (Desafio 1)
+│   └── README.md
+├── front-end/          # Projeto Front-end (UI para Desafio 1)
+│   └── README.md
+├── recipe-api/         # Projeto Back-end (Desafio 2)
+│   └── README.md
 ├── .gitignore          # Regras globais para o repositório
 ├── docker-compose.yml  # Orquestração de todos os containers
-└── README.md           # Esta documentação
+└── README.md           # Esta documentação (Visão Geral)
 ```
-
-## ⚙️ Pré-requisitos
-
-- **Docker e Docker Compose** (para o método de execução recomendado).
-- **Java (JDK) 17, Maven 3.8+, Node.js 20+** (para o ambiente de desenvolvimento local).
-- **Make** (opcional, para usar os atalhos do `Makefile`).
 
 ## 🚀 Como Executar
 
+Este projeto foi projetado para ser executado de duas maneiras principais, oferecendo flexibilidade para diferentes necessidades.
+
 ### 1. Ambiente Full-Stack com Docker (Método Recomendado)
 
-Esta é a forma mais simples e garantida de rodar a aplicação completa, pois não exige nenhuma outra dependência além do Docker.
+Esta é a forma mais simples e garantida de rodar a plataforma completa, pois não exige nenhuma dependência além do Docker.
 
 ```bash
-# Clone este repositório
+# Clone este repositório e entre na pasta raiz
 git clone <url-do-repositorio>
 cd challenge/
 
-# Suba todos os containers (Front, Back e Banco) com um único comando
-# O --build garante que as imagens serão construídas do zero na primeira vez
+# Suba todos os containers com um único comando
 docker-compose up --build
 ```
 
-Após a inicialização, acesse:
+Após a inicialização, os serviços estarão disponíveis nos seguintes endereços:
 
-- **Aplicação Front-end:** `http://localhost`
-- **Documentação da API (Swagger):** `http://localhost:8080/swagger-ui.html`
+| Serviço                                 | URL de Acesso                           |
+| :-------------------------------------- | :-------------------------------------- |
+| **Aplicação Front-end**                 | `http://localhost`                      |
+| **Dashboard API (Swagger)**             | `http://localhost:8080/swagger-ui.html` |
+| **Recipe API (Swagger)**                | `http://localhost:8081/swagger-ui.html` |
+| **Banco de Dados (para DBeaver, etc.)** | `localhost:5433`                        |
+
+Para parar tudo, pressione `Ctrl + C` no terminal e depois rode `docker-compose down -v`.
 
 ### 2. Ambiente de Desenvolvimento Local
 
-Esta opção é útil para desenvolvimento ativo e requer que as ferramentas (Java, Maven, Node, Postgres) estejam instaladas na sua máquina.
+Esta opção é útil para desenvolvimento ativo. Requer a instalação de todas as tecnologias (`Java`, `Node.js`, `PostgreSQL`, etc.) e o uso de **três terminais separados**.
 
-**Configuração Inicial do Banco de Dados (Passo único):**
-
-Antes de rodar o back-end pela primeira vez, você precisa garantir que o banco de dados local esteja pronto:
-
-1.  Garanta que você tem um servidor PostgreSQL rodando em `localhost:5432`.
-2.  Crie um novo banco de dados vazio com o nome `dashboard_db_dev`. Você pode usar o comando SQL:
-    ```sql
-    CREATE DATABASE dashboard_db_dev;
-    ```
-3.  Verifique se o usuário e senha no arquivo `dashboard-api/src/main/resources/application-dev.yml` correspondem às suas credenciais do PostgreSQL. O padrão no projeto é `username: postgres` e `password: admin`.
-
-Com o banco de dados criado, você pode iniciar as aplicações. Requer dois terminais.
-
-**Terminal 1 - Rodando o Back-end:**
-
-- **Opção A: Com Makefile (Recomendado)**
-  ```bash
-  cd challenge/dashboard-api
-  make dev-run-fresh
-  ```
-- **Opção B: Manualmente (Sem Makefile)**
-  ```bash # 1. Resete o schema do banco de dados (requer psql)
-  psql -U postgres -d dashboard_db_dev -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
-  # 2. Inicie a aplicação
-  cd challenge/dashboard-api
-  mvn spring-boot:run
-  ```
-
-_A API estará disponível em `http://localhost:8080`._
-
-**Terminal 2 - Rodando o Front-end:**
-
-```bash
-cd challenge/front-end
-
-# Instala as dependências (apenas na primeira vez)
-npm install
-
-# Inicia o servidor de desenvolvimento do Vite
-npm run dev
-```
-
-_A aplicação estará disponível em `http://localhost:5173` (ou a porta indicada pelo Vite)._
-
-## 📡 Documentação da API (Swagger)
-
-Com a aplicação rodando, a documentação interativa da API está disponível em:
-
-**`http://localhost:8080/swagger-ui.html`**
-
-Nela, você pode ver todos os endpoints, seus parâmetros, schemas de resposta e testá-los diretamente.
-
-**Endpoints Principais:**
-
-- `GET /api/dashboard`: Retorna os dados para a composição do dashboard.
-- `POST /api/tickets`: Cria um novo ticket.
-- `GET /api/clientes`: Retorna a lista de todos os clientes.
-- `GET /api/modulos`: Retorna a lista de todos os módulos.
+_Para instruções detalhadas de como configurar e rodar cada serviço individualmente, consulte o `README.md` dentro da pasta de cada projeto._
 
 ## 🌟 Melhorias Futuras
 
