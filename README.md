@@ -1,203 +1,143 @@
-# Desafio - API de Dashboard de Chamados
+# Desafio Full-Stack: Dashboard de Chamados
 
-![Java](https://img.shields.io/badge/Java-17-blue?logo=java&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-green?logo=spring&logoColor=white)
-![Maven](https://img.shields.io/badge/Maven-4.0-red?logo=apache-maven&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14-blue?logo=postgresql&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-20.10-blue?logo=docker&logoColor=white)
+![Java](https://img.shields.io/badge/Java-17-blue?logo=java&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.1-green?logo=spring&logoColor=white) ![React](https://img.shields.io/badge/React-18-blue?logo=react&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript&logoColor=white) ![Docker](https://img.shields.io/badge/Docker-20.10-blue?logo=docker&logoColor=white)
 
-API RESTful desenvolvida como solução para o desafio de Back-end. A aplicação fornece dados para um dashboard de chamados de suporte, permitindo a consulta de tickets e a criação de novos registros.
+Aplicação Full-Stack desenvolvida como solução para o desafio. A plataforma consiste em uma **API RESTful** construída com Spring Boot e um **Front-end interativo** construído com React, que consome a API para exibir um dashboard de chamados de suporte.
 
-Um dos requisitos centrais do desafio é que o agrupamento de dados (por cliente e por módulo) seja realizado na lógica da aplicação (em memória), e não diretamente no banco de dados via SQL.
+O requisito central do back-end é que o agrupamento de dados (por cliente e por módulo) seja realizado na lógica da aplicação (em memória), e não diretamente no banco de dados via SQL.
 
 ## ✨ Features
 
-- **Listagem de Tickets**: Retorna a lista de tickets para um determinado mês e ano.
-- **Dados Agrupados**: Retorna a contagem de tickets agrupados por cliente e por módulo.
-- **Criação de Tickets**: Permite a criação de novos tickets de suporte.
-- **Ambiente Containerizado**: Configuração completa com Docker e Docker Compose para um ambiente de produção consistente.
-- **Setup Automatizado**: Banco de dados e carga de dados iniciais gerenciados via Flyway.
-- **Comandos Simplificados**: Um `Makefile` para facilitar a execução, build e gerenciamento dos ambientes.
+- **API Robusta:** Back-end completo com endpoints para consulta e criação de dados.
+- **Dashboard Interativo:** Front-end com gráficos e tabelas que reagem dinamicamente aos filtros do usuário.
+- **Ambiente 100% Containerizado:** Configuração completa com Docker Compose para orquestrar o Front-end (Nginx), Back-end (Java) e Banco de Dados (PostgreSQL).
+- **Setup Automatizado:** Banco de dados e carga de dados iniciais gerenciados via Flyway.
+- **Documentação Interativa:** API documentada com Swagger/OpenAPI.
+- **Qualidade de Código:** Testes unitários na lógica de negócio e tratamento de erros centralizado.
+- **Estrutura de Branches Profissional:** Branches `main` e `develop` separadas, prontas para um fluxo de trabalho de CI/CD.
+- **Fluxo de Trabalho Simplificado:** Um `Makefile` para facilitar a execução, build e gerenciamento dos ambientes.
 
 ## 🛠️ Tecnologias Utilizadas
 
-| Tecnologia                  | Propósito                                                          |
-| :-------------------------- | :----------------------------------------------------------------- |
-| **Java 17**                 | Linguagem de programação principal.                                |
-| **Spring Boot 3.x**         | Framework principal para construção da API.                        |
-| **Spring Data JPA**         | Camada de persistência de dados.                                   |
-| **Maven**                   | Gerenciamento de dependências e build.                             |
-| **PostgreSQL 14**           | Banco de dados relacional.                                         |
-| **Flyway**                  | Ferramenta para versionamento e migração do schema do banco.       |
-| **Docker & Docker Compose** | Containerização da aplicação e do banco para ambiente de produção. |
-| **MapStruct**               | Mapeamento de DTOs para Entidades.                                 |
-| **Lombok**                  | Redução de código boilerplate.                                     |
-| **Makefile**                | Automação de comandos do projeto.                                  |
+### Back-end
+
+| Tecnologia            | Propósito                                    |
+| :-------------------- | :------------------------------------------- |
+| **Java 17**           | Linguagem de programação.                    |
+| **Spring Boot 3.4.1** | Framework principal da API.                  |
+| **Spring Data JPA**   | Camada de persistência de dados.             |
+| **PostgreSQL 14**     | Banco de dados relacional.                   |
+| **Flyway**            | Versionamento e migração do schema do banco. |
+| **MapStruct**         | Mapeamento de DTOs para Entidades.           |
+| **Springdoc-openapi** | Geração da documentação Swagger UI.          |
+| **Maven**             | Gerenciamento de dependências e build.       |
+
+### Front-end
+
+| Tecnologia       | Propósito                                            |
+| :--------------- | :--------------------------------------------------- |
+| **React 18**     | Biblioteca para construção da UI.                    |
+| **TypeScript**   | Superset do JavaScript com tipagem estática.         |
+| **Vite**         | Ferramenta de build e servidor de desenvolvimento.   |
+| **Tailwind CSS** | Framework de estilização utility-first.              |
+| **Shadcn/ui**    | Biblioteca de componentes de UI.                     |
+| **Recharts**     | Biblioteca para criação dos gráficos.                |
+| **Nginx**        | Servidor web para a versão de produção do front-end. |
 
 ## 📁 Estrutura do Projeto
 
-O projeto está organizado em uma estrutura de monorepo, separando o back-end e um placeholder para o front-end.
+O projeto está organizado em um monorepo, com o back-end e o front-end em diretórios separados na raiz.
 
 ```
 challenge/
-├── dashboard-api/      # Projeto Back-end Spring Boot (código-fonte)
-└── front-end/          # (Placeholder para futura aplicação front-end)
+├── dashboard-api/      # Projeto Back-end (Spring Boot)
+├── front-end/          # Projeto Front-end (React + Vite)
+├── .gitignore          # Regras globais para o repositório
+├── docker-compose.yml  # Orquestração de todos os containers
+└── README.md           # Esta documentação
 ```
-
-A arquitetura interna do back-end segue os princípios de Clean Code, com separação clara de responsabilidades:
-
-- `application/services`: Camada de lógica de negócio.
-- `domain/entitys`: Entidades do banco de dados (JPA).
-- `domain/repositories`: Repositórios Spring Data JPA.
-- `infrastructure/config`: Configurações do Spring (CORS).
-- `mappers`: Conversores de Entidade para DTO (MapStruct).
-- `web/controllers`: Camada da API REST.
-- `web/dtos`: Objetos de Transferência de Dados.
 
 ## ⚙️ Pré-requisitos
 
-Antes de começar, garanta que você tenha as seguintes ferramentas instaladas:
-
-- **Java (JDK) 17 ou superior**
-- **Maven 3.8 ou superior**
-- **PostgreSQL 14 ou superior** (apenas para o ambiente local)
-- **Cliente `psql`** (para o reset do banco local)
-- **Docker e Docker Compose** (para o ambiente de produção)
-- **Make** (opcional, para usar os comandos simplificados)
+- **Docker e Docker Compose** (para o método de execução recomendado).
+- **Java (JDK) 17, Maven 3.8+, Node.js 20+** (para o ambiente de desenvolvimento local).
+- **Make** (opcional, para usar os atalhos do `Makefile`).
 
 ## 🚀 Como Executar
 
-Você pode rodar o projeto de duas maneiras. Usar os comandos do `Makefile` é o método recomendado por ser mais simples.
+### 1. Ambiente Full-Stack com Docker (Método Recomendado)
 
-### 1. Ambiente de Desenvolvimento Local (Perfil `dev`)
-
-Esta opção utiliza o Java, Maven e PostgreSQL instalados na sua máquina.
-
-**Método Recomendado (com Makefile):**
+Esta é a forma mais simples e garantida de rodar a aplicação completa, pois não exige nenhuma outra dependência além do Docker.
 
 ```bash
-# Clone o repositório e entre na pasta da API
+# Clone este repositório
 git clone <url-do-repositorio>
-cd challenge/dashboard-api
+cd challenge/
 
-# Reseta o banco de dados local e inicia a aplicação
-# (Certifique-se que seu banco 'dashboard_db_dev' existe e as credenciais em
-# application-dev.yml estão corretas)
-make dev-run-fresh
+# Suba todos os containers (Front, Back e Banco) com um único comando
+# O --build garante que as imagens serão construídas do zero na primeira vez
+docker-compose up --build
 ```
 
-**Ou com os Comandos Padrões (sem Makefile):**
+Após a inicialização, acesse:
+
+- **Aplicação Front-end:** `http://localhost`
+- **Documentação da API (Swagger):** `http://localhost:8080/swagger-ui.html`
+
+### 2. Ambiente de Desenvolvimento Local
+
+Esta opção é útil para desenvolvimento ativo. Requer dois terminais.
+
+**Terminal 1 - Rodando o Back-end:**
+
+- **Opção A: Com Makefile (Recomendado)**
+  ```bash
+  cd challenge/dashboard-api
+  make dev-run-fresh
+  ```
+- **Opção B: Manualmente (Sem Makefile)**
+  ```bash
+  # 1. Resete o banco de dados (requer psql)
+  psql -U postgres -d dashboard_db_dev -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+
+  # 2. Inicie a aplicação
+  cd challenge/dashboard-api
+  mvn spring-boot:run
+  ```
+  _A API estará disponível em `http://localhost:8080`._
+
+**Terminal 2 - Rodando o Front-end:**
 
 ```bash
-# 1. Navegue até a pasta da API
-cd challenge/dashboard-api
+cd challenge/front-end
 
-# 2. Resete o banco de dados manualmente (requer o cliente psql)
-# Lembre-se de substituir o usuário 'postgres' se o seu for diferente
-psql -U postgres -d dashboard_db_dev -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+# Instala as dependências (apenas na primeira vez)
+npm install
 
-# 3. Inicie a aplicação com Maven
-mvn spring-boot:run
+# Inicia o servidor de desenvolvimento do Vite
+npm run dev
 ```
 
-A API estará disponível em `http://localhost:8080`.
+_A aplicação estará disponível em `http://localhost:5173` (ou a porta indicada pelo Vite)._
 
-### 2. Ambiente Docker (Perfil `prod`)
+## 📡 Documentação da API (Swagger)
 
-Esta é a forma mais simples, pois não exige nada além do Docker.
+Com a aplicação rodando, a documentação interativa da API está disponível em:
 
-**Método Recomendado (com Makefile):**
+**`http://localhost:8080/swagger-ui.html`**
 
-```bash
-# Clone o repositório e entre na pasta da API
-git clone <url-do-repositorio>
-cd challenge/dashboard-api
+Nela, você pode ver todos os endpoints, seus parâmetros, schemas de resposta e testá-los diretamente.
 
-# Constrói a imagem e inicia os containers em background
-make docker-up
-```
+**Endpoints Principais:**
 
-**Ou com o Comando Padrão (sem Makefile):**
-
-```bash
-# Navegue até a pasta da API
-cd challenge/dashboard-api
-
-# Constrói a imagem e inicia os containers em background
-docker-compose up --build -d
-```
-
-A API estará disponível em `http://localhost:8080`. Para parar os containers, use `make docker-down` ou `docker-compose down`.
-
-## 📡 Endpoints da API
-
-### 1. Obter Dados do Dashboard
-
-Retorna a lista de tickets e os dados agrupados por cliente e módulo para um mês/ano específico.
-
-- **Método:** `GET`
-- **URL:** `/api/dashboard`
-- **Parâmetros:**
-  - `ano` (int, obrigatório): O ano desejado.
-  - `mes` (int, obrigatório): O mês desejado.
-- **Exemplo:** `http://localhost:8080/api/dashboard?ano=2021&mes=3`
-- **Resposta de Sucesso (200 OK):**
-  ```json
-  {
-    "listaTickets": [
-      {
-        "id": 1,
-        "titulo": "Mussum Ipsum cacilds vidis litro",
-        "cliente": "Apple Inc.",
-        "modulo": "Financeiro",
-        "dataAbertura": "2021-03-01T00:00:00",
-        "dataEncerramento": "2021-03-02T00:00:00"
-      }
-    ],
-    "agrupadoPorCliente": {
-      "Apple Inc.": 33,
-      "Google": 45,
-      "Tesla": 27,
-      "Microsoft": 46,
-      "SpaceX": 25
-    },
-    "agrupadoPorModulo": {
-      "Financeiro": 57,
-      "Expedição": 33,
-      "Vendas": 45,
-      "Foguetes": 41
-    }
-  }
-  ```
-
-### 2. Criar Novo Ticket
-
-Cria um novo registro de ticket.
-
-- **Método:** `POST`
-- **URL:** `/api/tickets`
-- **Corpo da Requisição (JSON):**
-  ```json
-  {
-    "titulo": "Meu novo ticket de teste",
-    "clienteId": 1,
-    "moduloId": 2
-  }
-  ```
-- **Resposta de Sucesso (201 Created):**
-  ```json
-  {
-    "id": 201,
-    "titulo": "Meu novo ticket de teste",
-    "cliente": "Apple Inc.",
-    "modulo": "Vendas",
-    "dataAbertura": "2025-08-19T23:25:00",
-    "dataEncerramento": null
-  }
-  ```
+- `GET /api/dashboard`: Retorna os dados para a composição do dashboard.
+- `POST /api/tickets`: Cria um novo ticket.
+- `GET /api/clientes`: Retorna a lista de todos os clientes.
+- `GET /api/modulos`: Retorna a lista de todos os módulos.
 
 ## 🌟 Melhorias Futuras
 
-- **Segurança:** Implementar uma camada de segurança com Spring Security e JWT para proteger os endpoints.
-- **Testes:** Adicionar testes unitários (para a camada de serviço) e de integração (para a camada de controller) para garantir a qualidade e a estabilidade do código.
-- **Paginação:** Implementar paginação no endpoint de listagem de tickets para lidar com grandes volumes de dados.
+- **Segurança:** Implementar uma camada de segurança com Spring Security e JWT.
+- **Testes:** Adicionar mais testes de integração para validar o fluxo completo da API.
+- **Paginação:** Implementar paginação no front-end para a tabela de tickets.
+- **CI/CD:** Criar um pipeline de integração e entrega contínua para automatizar os builds e deploys.
