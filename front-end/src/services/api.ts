@@ -2,8 +2,8 @@ import type { DashboardData, Cliente, Modulo } from "../types";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export async function getDashboardData(ano: number, mes: number): Promise<DashboardData> {
-  const response = await fetch(`${BASE_URL}/dashboard?ano=${ano}&mes=${mes}`);
+export async function getDashboardData(ano: number, mes: number, page: number = 0, size: number = 10): Promise<DashboardData> {
+  const response = await fetch(`${BASE_URL}/dashboard?ano=${ano}&mes=${mes}&page=${page}&size=${size}&sort=id,desc`);
   if (!response.ok) 
     throw new Error("Falha ao buscar dados do dashboard");
   return response.json();
