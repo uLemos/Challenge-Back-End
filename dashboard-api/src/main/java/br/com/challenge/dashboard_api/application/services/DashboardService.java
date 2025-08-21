@@ -13,12 +13,15 @@ import br.com.challenge.dashboard_api.web.dtos.ClienteDTO;
 import br.com.challenge.dashboard_api.web.dtos.CreateTicketDTO;
 import br.com.challenge.dashboard_api.web.dtos.DashboardDataDTO;
 import br.com.challenge.dashboard_api.web.dtos.ModuloDTO;
+import br.com.challenge.dashboard_api.web.dtos.PagedResultDTO;
 import br.com.challenge.dashboard_api.web.dtos.TicketDTO;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
 
@@ -43,21 +46,21 @@ public class DashboardService {
     this.moduloMapper = moduloMapper;
   }
 
-  public DashboardDataDTO getDashboardData(int ano, int mes) {
-    List<Ticket> ticketsDb = ticketRepository.findByYearAndMonth(ano, mes);
+  public DashboardDataDTO getDashboardData(int ano, int mes, Pageable pageable) {
+    Page<Ticket> ticketsPaginados = ticketRepository.findByYearAndMonth(ano, mes, pageable);
+    Page<TicketDTO> ticketsDTOsPaginados = ticketsPaginados.map(ticketMapper::toDTO);
+    PagedResultDTO<TicketDTO> pagedResult = new PagedResultDTO<>(ticketsDTOsPaginados);
 
-    List<TicketDTO> listaTicketsDTO = ticketsDb.stream()
-        .map(ticketMapper::toDTO)
-        .toList();
+    List<Ticket> todosOsTicketsDoMes = ticketRepository.findAllByYearAndMonth(ano, mes);
 
-    Map<String, Long> agrupadoPorCliente = ticketsDb.stream()
+    Map<String, Long> agrupadoPorCliente = todosOsTicketsDoMes.stream()
         .collect(Collectors.groupingBy(ticket -> ticket.getCliente().getNome(), Collectors.counting()));
 
-    Map<String, Long> agrupadoPorModulo = ticketsDb.stream()
+    Map<String, Long> agrupadoPorModulo = todosOsTicketsDoMes.stream()
         .collect(Collectors.groupingBy(ticket -> ticket.getModulo().getNome(), Collectors.counting()));
 
     return DashboardDataDTO.builder()
-        .listaTickets(listaTicketsDTO)
+        .listaTickets(pagedResult)
         .agrupadoPorCliente(agrupadoPorCliente)
         .agrupadoPorModulo(agrupadoPorModulo)
         .build();
