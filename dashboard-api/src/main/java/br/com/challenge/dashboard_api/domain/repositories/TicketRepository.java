@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Repository
@@ -20,5 +22,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
    * @return Uma lista de tickets que correspondem ao filtro.
    */
   @Query("SELECT t FROM Ticket t WHERE YEAR(t.dataAbertura) = :ano AND MONTH(t.dataAbertura) = :mes")
-  List<Ticket> findByYearAndMonth(@Param("ano") int ano, @Param("mes") int mes);
+  List<Ticket> findAllByYearAndMonth(@Param("ano") int ano, @Param("mes") int mes);
+
+  @Query("SELECT t FROM Ticket t WHERE YEAR(t.dataAbertura) = :ano AND MONTH(t.dataAbertura) = :mes")
+  Page<Ticket> findByYearAndMonth(@Param("ano") int ano, @Param("mes") int mes, Pageable pageable);
 }
