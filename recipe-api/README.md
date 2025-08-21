@@ -36,7 +36,7 @@ Esta opção é útil para focar no desenvolvimento deste microserviço específ
 1.  **Pré-requisitos:** Java 17 e Maven 3.8+ instalados.
 2.  Navegue até a pasta deste projeto:
     ```bash
-    cd challenge/recipe-api
+    cd Challenge-Back-End/recipe-api
     ```
 3.  Inicie a aplicação com o Maven:
     ```bash
@@ -52,7 +52,7 @@ A forma mais simples de rodar esta API junto com todo o ecossistema é utilizand
 1.  **Pré-requisitos:** Docker e Docker Compose instalados.
 2.  Navegue até a **pasta raiz do projeto**:
     ```bash
-    cd challenge/
+    cd Challenge-Back-End/
     ```
 3.  Suba toda a plataforma:
     ```bash

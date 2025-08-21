@@ -9,6 +9,17 @@ Este repositório contém uma plataforma de software completa, desenvolvida como
 1.  **Dashboard de Chamados (Full-Stack):** Uma aplicação completa com uma API back-end que fornece dados para um dashboard de chamados e um front-end interativo que consome e exibe esses dados com gráficos e tabelas.
 2.  **API de Receitas (Proxy API):** Um microserviço back-end que atua como um proxy para uma API externa de receitas, expondo endpoints para busca e consulta de pratos disponíveis.
 
+## 📐 Decisões de Arquitetura e Melhorias
+
+Durante o desenvolvimento, algumas melhorias foram implementadas em relação ao protótipo original para garantir a robustez, escalabilidade e usabilidade da aplicação. A principal delas foi a adição de um filtro de ano.
+
+- **Filtro Combinado de Mês e Ano:** Embora o protótipo visual exibisse apenas um filtro de mês, foi tomada a decisão de engenharia de implementar um filtro combinado de **Mês e Ano**. Os motivos para esta melhoria foram:
+  - **Precisão dos Dados:** Um filtro apenas por "mês" é ambíguo. A adição do ano garante que o usuário saiba exatamente a qual período os dados se referem (ex: "Março de 2021" vs. "Março de 2022").
+  - **Escalabilidade:** A aplicação foi projetada para ser funcional a longo prazo. O filtro de ano permite a análise de dados históricos de múltiplos anos de forma simples e intuitiva.
+  - **Consistência com a API:** A API back-end foi corretamente projetada para receber ambos os parâmetros, garantindo consultas performáticas e inequívocas no banco de dados. A interface do usuário foi alinhada a este contrato robusto.
+
+Essa abordagem resulta em uma experiência de usuário mais completa e em uma base técnica mais sólida para a evolução futura do dashboard.
+
 ## ✨ Features Globais
 
 - **Arquitetura de Monorepo:** Múltiplos projetos gerenciados em um único repositório Git.
@@ -48,7 +59,7 @@ Este repositório contém uma plataforma de software completa, desenvolvida como
 ## 📁 Estrutura do Projeto
 
 ```
-challenge/
+Challenge-Back-End/
 ├── dashboard-api/      # Projeto Back-end (Desafio 1)
 │   └── README.md
 ├── front-end/          # Projeto Front-end (UI para Desafio 1)
@@ -71,7 +82,7 @@ Esta é a forma mais simples e garantida de rodar a plataforma completa, pois n�
 ```bash
 # Clone este repositório e entre na pasta raiz
 git clone <url-do-repositorio>
-cd challenge/
+cd Challenge-Back-End/
 
 # Suba todos os containers com um único comando
 docker-compose up --build
@@ -81,7 +92,7 @@ Após a inicialização, os serviços estarão disponíveis nos seguintes endere
 
 | Serviço                                 | URL de Acesso                           |
 | :-------------------------------------- | :-------------------------------------- |
-| **Aplicação Front-end**                 | `http://localhost`                      |
+| **Aplicação Front-end**                 | `http://localhost:5173`                 |
 | **Dashboard API (Swagger)**             | `http://localhost:8080/swagger-ui.html` |
 | **Recipe API (Swagger)**                | `http://localhost:8081/swagger-ui.html` |
 | **Banco de Dados (para DBeaver, etc.)** | `localhost:5433`                        |
