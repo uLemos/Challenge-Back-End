@@ -40,6 +40,10 @@ Para rodar este projeto localmente, siga os passos abaixo.
     Na primeira vez que for rodar o projeto, instale as dependências. No terminal, dentro da pasta `front-end/`:
 
     ```bash
+    cd Challenge-Back-End/front-end
+    ```
+
+    ```bash
     npm install
     ```
 

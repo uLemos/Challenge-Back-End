@@ -48,7 +48,7 @@ Este repositório contém uma plataforma de software completa, desenvolvida como
 ## 📁 Estrutura do Projeto
 
 ```
-challenge/
+Challenge-Back-End/
 ├── dashboard-api/      # Projeto Back-end (Desafio 1)
 │   └── README.md
 ├── front-end/          # Projeto Front-end (UI para Desafio 1)
@@ -71,7 +71,7 @@ Esta é a forma mais simples e garantida de rodar a plataforma completa, pois n�
 ```bash
 # Clone este repositório e entre na pasta raiz
 git clone <url-do-repositorio>
-cd challenge/
+cd Challenge-Back-End/
 
 # Suba todos os containers com um único comando
 docker-compose up --build
@@ -81,7 +81,7 @@ Após a inicialização, os serviços estarão disponíveis nos seguintes endere
 
 | Serviço                                 | URL de Acesso                           |
 | :-------------------------------------- | :-------------------------------------- |
-| **Aplicação Front-end**                 | `http://localhost`                      |
+| **Aplicação Front-end**                 | `http://localhost:5173`                 |
 | **Dashboard API (Swagger)**             | `http://localhost:8080/swagger-ui.html` |
 | **Recipe API (Swagger)**                | `http://localhost:8081/swagger-ui.html` |
 | **Banco de Dados (para DBeaver, etc.)** | `localhost:5433`                        |

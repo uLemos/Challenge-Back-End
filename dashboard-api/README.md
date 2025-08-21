@@ -51,6 +51,10 @@ Para rodar este serviço de forma isolada para desenvolvimento ou depuração.
 
 ### Iniciando a Aplicação
 
+```bash
+cd Challenge-Back-End/dashboard-api
+```
+
 - **Opção A: Com Makefile (Recomendado)**
   ```bash
   # Este comando reseta o schema e inicia a aplicação
