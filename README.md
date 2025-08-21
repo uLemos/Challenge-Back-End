@@ -86,7 +86,20 @@ Após a inicialização, acesse:
 
 ### 2. Ambiente de Desenvolvimento Local
 
-Esta opção é útil para desenvolvimento ativo. Requer dois terminais.
+Esta opção é útil para desenvolvimento ativo e requer que as ferramentas (Java, Maven, Node, Postgres) estejam instaladas na sua máquina.
+
+**Configuração Inicial do Banco de Dados (Passo único):**
+
+Antes de rodar o back-end pela primeira vez, você precisa garantir que o banco de dados local esteja pronto:
+
+1.  Garanta que você tem um servidor PostgreSQL rodando em `localhost:5432`.
+2.  Crie um novo banco de dados vazio com o nome `dashboard_db_dev`. Você pode usar o comando SQL:
+    ```sql
+    CREATE DATABASE dashboard_db_dev;
+    ```
+3.  Verifique se o usuário e senha no arquivo `dashboard-api/src/main/resources/application-dev.yml` correspondem às suas credenciais do PostgreSQL. O padrão no projeto é `username: postgres` e `password: admin`.
+
+Com o banco de dados criado, você pode iniciar as aplicações. Requer dois terminais.
 
 **Terminal 1 - Rodando o Back-end:**
 
@@ -96,14 +109,12 @@ Esta opção é útil para desenvolvimento ativo. Requer dois terminais.
   make dev-run-fresh
   ```
 - **Opção B: Manualmente (Sem Makefile)**
-  ```bash
-  # 1. Resete o banco de dados (requer psql)
+  ```bash # 1. Resete o schema do banco de dados (requer psql)
   psql -U postgres -d dashboard_db_dev -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
-
-  # 2. Inicie a aplicação
-  cd challenge/dashboard-api
-  mvn spring-boot:run
-  ```
+      # 2. Inicie a aplicação
+      cd challenge/dashboard-api
+      mvn spring-boot:run
+      ```
   _A API estará disponível em `http://localhost:8080`._
 
 **Terminal 2 - Rodando o Front-end:**
