@@ -5,6 +5,7 @@ import './index.css'
 import DashboardCharts from './components/DashboardCharts';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
 import TicketsTable from './components/TicketsTable';
+import { PaginationControls } from './components/PaginationControls';
 
 const MESES = [
   { value: 1, label: 'Janeiro' }, { value: 2, label: 'Fevereiro' }, { value: 3, label: 'Março' },
@@ -19,6 +20,7 @@ const ANOS = Array.from({ length: anoAtual - ANO_INICIAL + 1 }, (_, i) => ANO_IN
 
 export default function App() {
 
+  const [paginaAtual, setPaginaAtual] = useState(0);
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +33,7 @@ export default function App() {
       setLoading(true); 
       setError(null);
       try {
-        const dashboardData = await getDashboardData(anoSelecionado, mesSelecionado);
+        const dashboardData = await getDashboardData(anoSelecionado, mesSelecionado, paginaAtual);
         setData(dashboardData);
       } catch (err) {
         setError('Não foi possível carregar os dados da API. Verifique os filtros ou se o back-end está rodando.');
@@ -41,7 +43,7 @@ export default function App() {
       }
     };
     fetchDashboardData();
-  }, [anoSelecionado, mesSelecionado]);
+  }, [anoSelecionado, mesSelecionado, paginaAtual]);
 
   if (loading)
     return <div className="p-4">Carregando dados do dashboard...</div>;
@@ -85,7 +87,20 @@ export default function App() {
 
           {loading && <div className="p-4 text-center">Carregando dados...</div>}
           {error && <div className="p-4 text-red-500 text-center">{error}</div>}
-          {data && !loading && <TicketsTable tickets={data.listaTickets} />}
+          {data && !loading && (
+            <>
+              <TicketsTable tickets={data.listaTickets.content} />
+              <div className="flex items-center justify-center space-x-2 py-4">
+                {data.listaTickets.totalPages > 1 && (
+                  <PaginationControls
+                    currentPage={paginaAtual}
+                    totalPages={data.listaTickets.totalPages}
+                    onPageChange={setPaginaAtual}
+                  />
+                )}
+              </div>
+            </>
+          )}
         </div>
 
       </div>
