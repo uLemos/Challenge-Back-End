@@ -8,6 +8,7 @@ import br.com.challenge.dashboard_api.application.services.DashboardService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Pageable;
+import org.springdoc.core.annotations.ParameterObject;
 
 @RestController
 @RequestMapping("/api")
@@ -38,8 +41,9 @@ public class DashboardController {
   @GetMapping("/dashboard")
   public DashboardDataDTO getDashboardData(
       @Parameter(description = "Ano para o filtro.", required = true, example = "2021") @RequestParam @Min(value = 2021, message = "O ano deve ser 2021 ou superior.") int ano,
-      @Parameter(description = "Mês para o filtro (1-12).", required = true, example = "3") @RequestParam @Min(value = 1, message = "O mês deve ser entre 1 e 12.") @Max(value = 12, message = "O mês deve ser entre 1 e 12.") int mes) {
-    return dashboardService.getDashboardData(ano, mes);
+      @Parameter(description = "Mês para o filtro (1-12).", required = true, example = "3") @RequestParam @Min(value = 1, message = "O mês deve ser entre 1 e 12.") @Max(value = 12, message = "O mês deve ser entre 1 e 12.") int mes,
+      @ParameterObject Pageable pageable) {
+    return dashboardService.getDashboardData(ano, mes, pageable);
   }
 
   @Operation(summary = "Criar Novo Ticket", description = "Cria um novo registro de ticket no sistema.")
