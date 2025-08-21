@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: recipe-api
+forkify:
+  api:
+    base-url: https://forkify-api.herokuapp.com/api
+
+server:
+  port: 8081

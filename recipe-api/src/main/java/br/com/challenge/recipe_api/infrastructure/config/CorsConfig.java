@@ -1,4 +1,4 @@
-package br.com.challenge.dashboard_api.infrastructure.config;
+package br.com.challenge.recipe_api.infrastructure.config;
 
 import org.springframework.lang.NonNull;
 import org.springframework.context.annotation.Configuration;

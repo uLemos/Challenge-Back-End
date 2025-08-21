@@ -3,13 +3,26 @@ package br.com.challenge.dashboard_api.web.controllers;
 import br.com.challenge.dashboard_api.web.dtos.CreateTicketDTO;
 import br.com.challenge.dashboard_api.web.dtos.DashboardDataDTO;
 import br.com.challenge.dashboard_api.web.dtos.TicketDTO;
+import br.com.challenge.dashboard_api.web.dtos.errors.ErrorResponseDTO;
 import br.com.challenge.dashboard_api.application.services.DashboardService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api")
+@Validated
+@Tag(name = "Dashboard", description = "Endpoints principais para visualização e criação de tickets")
 public class DashboardController {
 
   private final DashboardService dashboardService;
@@ -18,11 +31,22 @@ public class DashboardController {
     this.dashboardService = dashboardService;
   }
 
+  @Operation(summary = "Obter Dados do Dashboard", description = "Retorna a lista de tickets e os dados agrupados por cliente e módulo para um mês/ano específico.")
+  @ApiResponse(responseCode = "200", description = "Dados retornados com sucesso.")
+  @ApiResponse(responseCode = "400", description = "Parâmetros inválidos (ex: mês > 12).", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
+  @ApiResponse(responseCode = "500", description = "Erro interno no servidor.", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
   @GetMapping("/dashboard")
-  public DashboardDataDTO getDashboardData(@RequestParam int ano, @RequestParam int mes) {
+  public DashboardDataDTO getDashboardData(
+      @Parameter(description = "Ano para o filtro.", required = true, example = "2021") @RequestParam @Min(value = 2021, message = "O ano deve ser 2021 ou superior.") int ano,
+      @Parameter(description = "Mês para o filtro (1-12).", required = true, example = "3") @RequestParam @Min(value = 1, message = "O mês deve ser entre 1 e 12.") @Max(value = 12, message = "O mês deve ser entre 1 e 12.") int mes) {
     return dashboardService.getDashboardData(ano, mes);
   }
 
+  @Operation(summary = "Criar Novo Ticket", description = "Cria um novo registro de ticket no sistema.")
+  @ApiResponse(responseCode = "201", description = "Ticket criado com sucesso.")
+  @ApiResponse(responseCode = "400", description = "Dados de entrada inválidos.", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
+  @ApiResponse(responseCode = "404", description = "Cliente ou Módulo não encontrado pelo ID fornecido.", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
+  @ApiResponse(responseCode = "500", description = "Erro interno no servidor.", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
   @PostMapping("/tickets")
   @ResponseStatus(HttpStatus.CREATED)
   public TicketDTO createTicket(@Valid @RequestBody CreateTicketDTO createTicketDTO) {

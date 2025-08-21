@@ -1,0 +1,95 @@
+import { useEffect, useState } from 'react'
+import type { DashboardData } from './types'
+import { getDashboardData } from './services/api';
+import './index.css'
+import DashboardCharts from './components/DashboardCharts';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
+import TicketsTable from './components/TicketsTable';
+
+const MESES = [
+  { value: 1, label: 'Janeiro' }, { value: 2, label: 'Fevereiro' }, { value: 3, label: 'Março' },
+  { value: 4, label: 'Abril' }, { value: 5, label: 'Maio' }, { value: 6, label: 'Junho' },
+  { value: 7, label: 'Julho' }, { value: 8, label: 'Agosto' }, { value: 9, label: 'Setembro' },
+  { value: 10, label: 'Outubro' }, { value: 11, label: 'Novembro' }, { value: 12, label: 'Dezembro' }
+];
+
+const ANO_INICIAL = 2021;
+const anoAtual = new Date().getFullYear();
+const ANOS = Array.from({ length: anoAtual - ANO_INICIAL + 1 }, (_, i) => ANO_INICIAL + i).reverse();
+
+export default function App() {
+
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [anoSelecionado, setAnoSelecionado] = useState<number>(2021);
+  const [mesSelecionado, setMesSelecionado] = useState<number>(3);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      setLoading(true); 
+      setError(null);
+      try {
+        const dashboardData = await getDashboardData(anoSelecionado, mesSelecionado);
+        setData(dashboardData);
+      } catch (err) {
+        setError('Não foi possível carregar os dados da API. Verifique os filtros ou se o back-end está rodando.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboardData();
+  }, [anoSelecionado, mesSelecionado]);
+
+  if (loading)
+    return <div className="p-4">Carregando dados do dashboard...</div>;
+
+  if (error)
+    return <div className='text-red-500'>{error}</div>;
+
+  return (
+    <main className="bg-gray-100 min-h-screen p-4 md:p-8 font-sans">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6 text-gray-800">Dashboard de Chamados</h1>
+        
+        {data && !loading && (
+          <DashboardCharts 
+            dataCliente={data.agrupadoPorCliente} 
+            dataModulo={data.agrupadoPorModulo} 
+          />
+        )}
+        
+        <div className="mt-6">
+          <div className="flex items-center gap-4 mb-4 p-4 bg-white rounded-lg shadow-md">
+            <h2 className="text-lg font-semibold whitespace-nowrap">Chamados do Mês de:</h2>
+            <Select value={String(mesSelecionado)} onValueChange={(value) => setMesSelecionado(Number(value))}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Selecione o Mês" />
+              </SelectTrigger>
+              <SelectContent>
+                {MESES.map(mes => <SelectItem key={mes.value} value={String(mes.value)}>{mes.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
+
+            <Select value={String(anoSelecionado)} onValueChange={(value) => setAnoSelecionado(Number(value))}>
+              <SelectTrigger className="w-[120px]">
+                <SelectValue placeholder="Selecione o Ano" />
+              </SelectTrigger>
+              <SelectContent>
+                {ANOS.map(ano => <SelectItem key={ano} value={String(ano)}>{ano}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {loading && <div className="p-4 text-center">Carregando dados...</div>}
+          {error && <div className="p-4 text-red-500 text-center">{error}</div>}
+          {data && !loading && <TicketsTable tickets={data.listaTickets} />}
+        </div>
+
+      </div>
+    </main>
+  );
+}
+
