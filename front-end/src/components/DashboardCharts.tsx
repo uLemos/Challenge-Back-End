@@ -16,7 +16,7 @@ export default function DashboardCharts({ dataCliente, dataModulo }: DashboardCh
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2 mb-6">
       <Card>
-        <CardHeader>
+        <CardHeader className='flex items-center justify-center'>
           <CardTitle>Chamados por Cliente</CardTitle>
         </CardHeader>
         <CardContent>
@@ -44,7 +44,7 @@ export default function DashboardCharts({ dataCliente, dataModulo }: DashboardCh
       </Card>
 
       <Card>
-        <CardHeader>
+        <CardHeader className='flex items-center justify-center'>
           <CardTitle>Chamados por Módulo</CardTitle>
         </CardHeader>
         <CardContent>

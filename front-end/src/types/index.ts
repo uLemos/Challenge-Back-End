@@ -1,3 +1,11 @@
+export interface Page<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  currentPage: number;
+  size: number;
+}
+
 export interface Ticket{
   id: number;
   titulo: string;
@@ -8,7 +16,7 @@ export interface Ticket{
 }
 
 export interface DashboardData {
-  listaTickets: Ticket[];
+  listaTickets: Page<Ticket>;
   agrupadoPorCliente: Record<string, number>;
   agrupadoPorModulo: Record<string, number>;
 }
