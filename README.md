@@ -108,5 +108,4 @@ _Para instruções detalhadas de como configurar e rodar cada serviço individua
 
 - **Segurança:** Implementar uma camada de segurança com Spring Security e JWT.
 - **Testes:** Adicionar mais testes de integração para validar o fluxo completo da API.
-- **Paginação:** Implementar paginação no front-end para a tabela de tickets.
 - **CI/CD:** Criar um pipeline de integração e entrega contínua para automatizar os builds e deploys.
