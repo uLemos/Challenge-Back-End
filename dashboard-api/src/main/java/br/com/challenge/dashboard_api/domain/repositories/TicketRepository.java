@@ -21,6 +21,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
    * @param mes O mês para filtrar os tickets.
    * @return Uma lista de tickets que correspondem ao filtro.
    */
+  @Query("SELECT t FROM Ticket t WHERE month(t.dataAbertura) = :mes")
+  List<Ticket> findAllByMonthAcrossYears(@Param("mes") int mes);
+
+  @Query("SELECT t FROM Ticket t WHERE month(t.dataAbertura) = :mes")
+  Page<Ticket> findPageByMonthAcrossYears(@Param("mes") int mes, Pageable pageable);
+
   @Query("SELECT t FROM Ticket t WHERE YEAR(t.dataAbertura) = :ano AND MONTH(t.dataAbertura) = :mes")
   List<Ticket> findAllByYearAndMonth(@Param("ano") int ano, @Param("mes") int mes);
 
