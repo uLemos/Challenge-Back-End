@@ -79,6 +79,52 @@ class DashboardServiceTest {
   }
 
   @Test
+  @DisplayName("Deve agrupar tickets por mês (de todos os anos) e retornar dados paginados")
+  void getDashboardDataByMonth_deveAgruparCorretamente() {
+    // Arrange
+    List<Ticket> mockTickets = Arrays.asList(
+        createTicket(1L, clienteA, moduloX),
+        createTicket(2L, clienteA, moduloY),
+        createTicket(3L, clienteB, moduloX));
+
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Ticket> mockPage = new PageImpl<>(mockTickets, pageable, mockTickets.size());
+
+    // Mockamos os DOIS métodos do repositório para a busca por mês
+    when(ticketRepository.findPageByMonthAcrossYears(anyInt(), any(Pageable.class))).thenReturn(mockPage);
+    when(ticketRepository.findAllByMonthAcrossYears(anyInt())).thenReturn(mockTickets);
+
+    // Mockamos o mapper como no outro teste
+    when(ticketMapper.toDTO(any(Ticket.class))).thenAnswer(invocation -> {
+      Ticket t = invocation.getArgument(0);
+      // Retornamos um DTO de teste simples. O conteúdo exato não importa, apenas a
+      // estrutura.
+      return new TicketDTO(t.getId(), t.getTitulo(), t.getCliente().getNome(), t.getModulo().getNome(), null, null);
+    });
+
+    // Act
+    // Chamamos o NOVO método que queremos testar
+    DashboardDataDTO result = dashboardService.getDashboardDataByMonth(3, pageable);
+
+    // Assert
+    assertNotNull(result);
+
+    // Verificamos o conteúdo da página
+    assertEquals(3, result.getListaTickets().getContent().size());
+    assertEquals(1, result.getListaTickets().getTotalPages());
+
+    // Verificamos a lógica de agrupamento (que deve ser idêntica ao outro teste)
+    assertEquals(2, result.getAgrupadoPorCliente().get("Cliente A"));
+    assertEquals(1, result.getAgrupadoPorCliente().get("Cliente B"));
+    assertEquals(2, result.getAgrupadoPorModulo().get("Modulo X"));
+    assertEquals(1, result.getAgrupadoPorModulo().get("Modulo Y"));
+
+    // Verificamos se os métodos corretos do repositório foram chamados
+    verify(ticketRepository, times(1)).findPageByMonthAcrossYears(eq(3), any(Pageable.class));
+    verify(ticketRepository, times(1)).findAllByMonthAcrossYears(3);
+  }
+
+  @Test
   @DisplayName("Deve agrupar tickets por cliente e por módulo corretamente")
   void getDashboardData_deveAgruparCorretamente() {
 
@@ -92,9 +138,9 @@ class DashboardServiceTest {
     Pageable pageable = PageRequest.of(0, 10);
     Page<Ticket> mockPage = new PageImpl<>(mockTickets, pageable, mockTickets.size());
 
-    // Quando o método findByYearAndMonth
+    // Quando o método findPageByYearAndMonth
     // for chamado com quaisquer inteiros, ENTÃO retorne a nossa lista de teste".
-    when(ticketRepository.findByYearAndMonth(anyInt(), anyInt(), any(Pageable.class))).thenReturn(mockPage);
+    when(ticketRepository.findPageByYearAndMonth(anyInt(), anyInt(), any(Pageable.class))).thenReturn(mockPage);
     when(ticketRepository.findAllByYearAndMonth(anyInt(), anyInt())).thenReturn(mockTickets);
 
     when(ticketMapper.toDTO(any(Ticket.class))).thenAnswer(invocation -> {
@@ -119,7 +165,7 @@ class DashboardServiceTest {
     assertEquals(1, result.getAgrupadoPorModulo().get("Modulo Y"));
 
     // Verificamos se o repositório foi chamado exatamente 1 vez.
-    verify(ticketRepository, times(1)).findByYearAndMonth(eq(2025), eq(8), any(Pageable.class));
+    verify(ticketRepository, times(1)).findPageByYearAndMonth(eq(2025), eq(8), any(Pageable.class));
     verify(ticketRepository, times(1)).findAllByYearAndMonth(2025, 8);
   }
 
@@ -132,7 +178,7 @@ class DashboardServiceTest {
     Page<Ticket> emptyPage = Page.empty(pageable);
 
     // Configuramos o mock para retornar uma lista vazia.
-    when(ticketRepository.findByYearAndMonth(anyInt(), anyInt(), any(Pageable.class))).thenReturn(emptyPage);
+    when(ticketRepository.findPageByYearAndMonth(anyInt(), anyInt(), any(Pageable.class))).thenReturn(emptyPage);
     when(ticketRepository.findAllByYearAndMonth(anyInt(), anyInt())).thenReturn(Collections.emptyList());
 
     // Act: Executamos o método.
