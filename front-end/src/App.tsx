@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { DashboardData } from './types'
-import { getDashboardData } from './services/api';
+import { getDashboardDataByMonth } from './services/api';
 import './index.css'
 import DashboardCharts from './components/DashboardCharts';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
@@ -14,10 +14,6 @@ const MESES = [
   { value: 10, label: 'Outubro' }, { value: 11, label: 'Novembro' }, { value: 12, label: 'Dezembro' }
 ];
 
-const ANO_INICIAL = 2021;
-const anoAtual = new Date().getFullYear();
-const ANOS = Array.from({ length: anoAtual - ANO_INICIAL + 1 }, (_, i) => ANO_INICIAL + i).reverse();
-
 export default function App() {
 
   const [paginaAtual, setPaginaAtual] = useState(0);
@@ -25,7 +21,6 @@ export default function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [anoSelecionado, setAnoSelecionado] = useState<number>(2021);
   const [mesSelecionado, setMesSelecionado] = useState<number>(3);
 
   useEffect(() => {
@@ -33,7 +28,7 @@ export default function App() {
       setLoading(true); 
       setError(null);
       try {
-        const dashboardData = await getDashboardData(anoSelecionado, mesSelecionado, paginaAtual);
+        const dashboardData = await getDashboardDataByMonth(mesSelecionado, paginaAtual);
         setData(dashboardData);
       } catch (err) {
         setError('Não foi possível carregar os dados da API. Verifique os filtros ou se o back-end está rodando.');
@@ -43,7 +38,7 @@ export default function App() {
       }
     };
     fetchDashboardData();
-  }, [anoSelecionado, mesSelecionado, paginaAtual]);
+  }, [mesSelecionado, paginaAtual]);
 
   if (loading)
     return <div className="p-4">Carregando dados do dashboard...</div>;
@@ -52,7 +47,7 @@ export default function App() {
     return <div className='text-red-500'>{error}</div>;
 
   return (
-    <main className="bg-gray-100 min-h-screen p-4 md:p-8 font-sans">
+    <main className="min-h-screen p-4 md:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold mb-6 text-gray-800">Dashboard de Chamados</h1>
         
@@ -64,23 +59,14 @@ export default function App() {
         )}
         
         <div className="mt-6">
-          <div className="flex items-center gap-4 mb-4 p-4 bg-white rounded-lg shadow-md">
+          <div className="flex items-center gap-4 mb-4 p-4 rounded-lg">
             <h2 className="text-lg font-semibold whitespace-nowrap">Chamados do Mês de:</h2>
             <Select value={String(mesSelecionado)} onValueChange={(value) => setMesSelecionado(Number(value))}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Selecione o Mês" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent >
                 {MESES.map(mes => <SelectItem key={mes.value} value={String(mes.value)}>{mes.label}</SelectItem>)}
-              </SelectContent>
-            </Select>
-
-            <Select value={String(anoSelecionado)} onValueChange={(value) => setAnoSelecionado(Number(value))}>
-              <SelectTrigger className="w-[120px]">
-                <SelectValue placeholder="Selecione o Ano" />
-              </SelectTrigger>
-              <SelectContent>
-                {ANOS.map(ano => <SelectItem key={ano} value={String(ano)}>{ano}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
