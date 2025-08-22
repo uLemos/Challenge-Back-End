@@ -11,14 +11,13 @@ Este repositório contém uma plataforma de software completa, desenvolvida como
 
 ## 📐 Decisões de Arquitetura e Melhorias
 
-Durante o desenvolvimento, algumas melhorias foram implementadas em relação ao protótipo original para garantir a robustez, escalabilidade e usabilidade da aplicação. A principal delas foi a adição de um filtro de ano.
+O protótipo visual do desafio apresentava um filtro simplificado, apenas por mês. Durante a análise técnica, foi identificado que um filtro apenas por mês apresenta ambiguidades (ex: "Março" de qual ano?) e desafios de performance ao agregar dados de múltiplos anos.
 
-- **Filtro Combinado de Mês e Ano:** Embora o protótipo visual exibisse apenas um filtro de mês, foi tomada a decisão de engenharia de implementar um filtro combinado de **Mês e Ano**. Os motivos para esta melhoria foram:
-  - **Precisão dos Dados:** Um filtro apenas por "mês" é ambíguo. A adição do ano garante que o usuário saiba exatamente a qual período os dados se referem (ex: "Março de 2021" vs. "Março de 2022").
-  - **Escalabilidade:** A aplicação foi projetada para ser funcional a longo prazo. O filtro de ano permite a análise de dados históricos de múltiplos anos de forma simples e intuitiva.
-  - **Consistência com a API:** A API back-end foi corretamente projetada para receber ambos os parâmetros, garantindo consultas performáticas e inequívocas no banco de dados. A interface do usuário foi alinhada a este contrato robusto.
+Para conciliar a fidelidade ao protótipo com a robustez técnica, a API foi projetada para oferecer **dois níveis de granularidade na consulta**:
 
-Essa abordagem resulta em uma experiência de usuário mais completa e em uma base técnica mais sólida para a evolução futura do dashboard.
+1.  **Endpoint Simplificado (`GET /api/dashboard/by-month`):** Este endpoint permite a filtragem apenas por mês, agregando dados de todos os anos. A interface principal do front-end utiliza esta opção por padrão, **reproduzindo fielmente o comportamento visual solicitado no protótipo**.
+
+2.  **Endpoint Preciso e Paginado (`GET /api/dashboard/by-month-and-year`):** Este endpoint, que requer `ano` e `mês` como parâmetros obrigatórios, foi mantido como a solução tecnicamente mais robusta e escalável. Ele está pronto para ser consumido por futuras versões do dashboard ou por outros clientes que necessitem de consultas mais granulares e performáticas.
 
 ## ✨ Features Globais
 
