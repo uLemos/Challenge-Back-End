@@ -31,5 +31,5 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
   List<Ticket> findAllByYearAndMonth(@Param("ano") int ano, @Param("mes") int mes);
 
   @Query("SELECT t FROM Ticket t WHERE YEAR(t.dataAbertura) = :ano AND MONTH(t.dataAbertura) = :mes")
-  Page<Ticket> findByYearAndMonth(@Param("ano") int ano, @Param("mes") int mes, Pageable pageable);
+  Page<Ticket> findPageByYearAndMonth(@Param("ano") int ano, @Param("mes") int mes, Pageable pageable);
 }

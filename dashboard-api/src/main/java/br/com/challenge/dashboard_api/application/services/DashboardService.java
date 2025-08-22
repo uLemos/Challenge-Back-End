@@ -47,11 +47,32 @@ public class DashboardService {
   }
 
   public DashboardDataDTO getDashboardData(int ano, int mes, Pageable pageable) {
-    Page<Ticket> ticketsPaginados = ticketRepository.findByYearAndMonth(ano, mes, pageable);
+    Page<Ticket> ticketsPaginados = ticketRepository.findPageByYearAndMonth(ano, mes, pageable);
     Page<TicketDTO> ticketsDTOsPaginados = ticketsPaginados.map(ticketMapper::toDTO);
     PagedResultDTO<TicketDTO> pagedResult = new PagedResultDTO<>(ticketsDTOsPaginados);
 
     List<Ticket> todosOsTicketsDoMes = ticketRepository.findAllByYearAndMonth(ano, mes);
+
+    Map<String, Long> agrupadoPorCliente = todosOsTicketsDoMes.stream()
+        .collect(Collectors.groupingBy(ticket -> ticket.getCliente().getNome(), Collectors.counting()));
+
+    Map<String, Long> agrupadoPorModulo = todosOsTicketsDoMes.stream()
+        .collect(Collectors.groupingBy(ticket -> ticket.getModulo().getNome(), Collectors.counting()));
+
+    return DashboardDataDTO.builder()
+        .listaTickets(pagedResult)
+        .agrupadoPorCliente(agrupadoPorCliente)
+        .agrupadoPorModulo(agrupadoPorModulo)
+        .build();
+  }
+
+  public DashboardDataDTO getDashboardDataByMonth(int mes, Pageable pageable) {
+
+    Page<Ticket> ticketsPaginados = ticketRepository.findPageByMonthAcrossYears(mes, pageable);
+    Page<TicketDTO> ticketsDTOsPaginados = ticketsPaginados.map(ticketMapper::toDTO);
+    PagedResultDTO<TicketDTO> pagedResult = new PagedResultDTO<>(ticketsDTOsPaginados);
+
+    List<Ticket> todosOsTicketsDoMes = ticketRepository.findAllByMonthAcrossYears(mes);
 
     Map<String, Long> agrupadoPorCliente = todosOsTicketsDoMes.stream()
         .collect(Collectors.groupingBy(ticket -> ticket.getCliente().getNome(), Collectors.counting()));
