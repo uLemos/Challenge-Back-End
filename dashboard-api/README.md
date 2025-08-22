@@ -92,8 +92,9 @@ Com a aplicação rodando, a documentação interativa da API está disponível 
 
 **Endpoints Principais:**
 
-- `GET /api/dashboard`: Retorna os dados para a composição do dashboard.
-- `POST /api/tickets`: Cria um novo ticket.
+- `GET /api/dashboard/by-month`: Retorna os dados para a composição do dashboard por mês.
+- `GET /api/dashboard/by-month-and-year`: Retorna os dados para a composição do dashboard por mês e ano.
+- `POST /api/dashboard/tickets`: Cria um novo ticket.
 - `GET /api/clientes`: Retorna a lista de todos os clientes.
 - `GET /api/modulos`: Retorna a lista de todos os módulos.
 
